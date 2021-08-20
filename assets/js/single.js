@@ -1,6 +1,26 @@
 var issueContainerEl = document.querySelector("#issues-container");
 var limitWarningEl = document.querySelector("#limit-warning");
+var repoNameEl = document.querySelector("#repo-name");
 
+//get repo name function 
+var getRepoName = function() {
+    var queryString = document.location.search;
+    //^^ = "?repo=michellewehr/git-it-done"
+    //split() @ "=" and get the 2nd half of string @ index 1
+    var repoName = queryString.split("=")[1];
+    // console.log(repoName); "michellewehr/git-it-done"
+
+    if(repoName) {
+        repoNameEl.textContent = repoName;
+        //pass repoName into get repo issues funciton call
+        getRepoIssues(repoName);
+    }
+    //if not a repoName existing then return to homepage
+    else {
+        document.location.replace("./index.html");
+    }
+   
+}
 var displayWarning = function(repo) {
     //add text to warning container
     limitWarningEl.textContent = "To see more than 30 issues, visit "; 
@@ -11,6 +31,7 @@ var displayWarning = function(repo) {
     linkEl.setAttribute("target", "_blank");
     //append to warning container
     limitWarningEl.appendChild(linkEl);
+   
 }
 
 var getRepoIssues = function(repo) {
@@ -24,10 +45,11 @@ var getRepoIssues = function(repo) {
                 if(response.headers.get("Link")) {
                     displayWarning();
                 }
-            })
+            });
 
         } else {
-            alert("There was a problem with your request!");
+           //if not successful, redirect to homepage
+           document.location.replace("./index.html");
         }
     })
 };
@@ -68,4 +90,4 @@ var displayIssues = function(issues) {
     }
 }
 
-getRepoIssues("facebook/react");
+getRepoName();
