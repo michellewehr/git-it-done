@@ -4,6 +4,8 @@ var repoNameEl = document.querySelector("#repo-name");
 
 //get repo name function 
 var getRepoName = function() {
+    // search is js t property allows you to read the current page’s query string
+    // .search = returns something like ?q=hello.
     var queryString = document.location.search;
     //^^ = "?repo=michellewehr/git-it-done"
     //split() @ "=" and get the 2nd half of string @ index 1

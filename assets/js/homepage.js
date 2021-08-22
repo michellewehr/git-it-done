@@ -3,7 +3,8 @@ var nameInputEl = document.querySelector("#username");
 //reference right column showing repos for: #repo-search-term and div with #repos-container/ class list-group
 var repoContainerEl = document.querySelector("#repos-container");
 var repoSearchTerm = document.querySelector("#repo-search-term");
-
+//language buttons
+var languageButtonsEl = document.getElementById("language-buttons");
 //submit form handling function
 var formSubmitHandler = function(event) {
     //prevent default prevents the browswer from sending hte forms input data to a url as we'll handle what happens with the form input data oursleves in js
@@ -37,7 +38,8 @@ var getUserRepos = function (user) {
         //if no 404 error/ response.ok = successful, if not alert if there is a 404 error
         if(response.ok) {
             response.json().then(function(data) {
-                displayRepos(data, user);
+               console.log(data);
+                // displayRepos(data, user);
             });
         } else {
             alert("Error: GitHub User Not Found");
@@ -94,5 +96,34 @@ var displayRepos = function(repos, searchTerm) {
    }
 }
 
+//get featured repos function 
+ var getFeaturedRepos = function(language) {
+     var apiUrl = "https://api.github.com/search/repositories?q=" + language + "+is:featured&sort=help-wanted-issues";
+     
+     fetch(apiUrl).then(function(response) {
+         if(response.ok) {
+            response.json().then(function(data) {
+                displayRepos(data.items, language);
+            });
+         } else {
+             alert("Error: GitHub User Not Found");
+         }
+     });
+ };
+//button click handler for language buttons
+var buttonClickHandler = function(event) {
+    var language = event.target.getAttribute("data-language");
+    console.log(language)
 
+    if (language) {
+        getFeaturedRepos(language);
+
+        //clear old content
+        repoContainerEl.textContent = "";
+    }
+}
+
+
+ //add event listenre for language button div
+ languageButtonsEl.addEventListener("click", buttonClickHandler);
 getUserRepos();
